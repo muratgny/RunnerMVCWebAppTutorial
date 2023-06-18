@@ -1,10 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using RunnerMVCWebAppTutorial.Data;
+using RunnerMVCWebAppTutorial.Interfaces;
+using RunnerMVCWebAppTutorial.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IClubRepository, ClubRepository>();
+builder.Services.AddScoped<IRaceRepository, RaceRepository>();
 
 //Configuring and adding ef and sql server here
 builder.Services.AddDbContext<AppDbContext>(options =>

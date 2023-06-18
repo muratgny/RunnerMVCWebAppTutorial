@@ -1,20 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RunnerMVCWebAppTutorial.Data;
+using RunnerMVCWebAppTutorial.Interfaces;
 
 namespace RunnerMVCWebAppTutorial.Controllers
 {
     public class RaceController : Controller
     {
-        AppDbContext _context;
-        public RaceController(AppDbContext context)
+        IRaceRepository _raceRepository;
+        public RaceController(IRaceRepository raceRepository)
         {
-            _context = context;
+            _raceRepository = raceRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var races = _context.Races.ToList();
+            var races = await _raceRepository.GetAll();
             return View(races);
+        }
+
+        public async Task<IActionResult> DetailRace(int id)
+        {
+            var race = await _raceRepository.GetByIdAsync(id);
+            return View(race);
         }
     }
 }
