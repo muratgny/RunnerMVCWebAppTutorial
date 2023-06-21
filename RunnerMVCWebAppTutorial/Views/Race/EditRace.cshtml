@@ -1,0 +1,60 @@
+﻿@using RunnerMVCWebAppTutorial.Data.Enum;
+@using RunnerMVCWebAppTutorial.ViewModels;
+@model EditRaceViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<form method="post" asp-action="EditRace" enctype="multipart/form-data">
+    @*burdaki enctype ı image upload ettiğimiz için ekledik*@
+    <input type="hidden" asp-for="Race.Id" id="id" />
+    <input type="hidden" asp-for="Race.AddressId" id="addressId" />
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="Race.Title" class="form-control form-control-lg" placeholder="Title" />
+            <span asp-validation-for="Race.Title" class="text-danger"></span>
+        </div>
+        <div class="col">
+            <select asp-for="Race.RaceCategory" asp-items="@Html.GetEnumSelectList<RaceCategory>()" class="form-control form-control-lg">
+                <option>--Select--</option>
+            </select>
+            <span asp-validation-for="Race.RaceCategory" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="Race.Description" class="form-control form-control-lg" placeholder="Description" />
+            <span asp-validation-for="Race.Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="Race.Address.Street" class="form-control form-control-lg" placeholder="Street" />
+            <span asp-validation-for="Race.Address.Street" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="Race.Address.City" class="form-control form-control-lg" placeholder="City" />
+            <span asp-validation-for="Race.Address.City" class="text-danger"></span>
+        </div>
+        <div class="col">
+            <input asp-for="Race.Address.State" class="form-control form-control-lg" placeholder="State" />
+            <span asp-validation-for="Race.Address.State" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="File" type="file" class="form-control form-control-lg" placeholder="Image" />
+            <span asp-validation-for="File" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <button class="btn btn-block btn-success btn-lg" type="submit">Update</button>
+        </div>
+    </div>
+</form>

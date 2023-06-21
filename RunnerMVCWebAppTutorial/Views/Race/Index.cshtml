@@ -18,13 +18,13 @@
 
                         <div class="card-body">
                             <img class="bd-placeholder-img card-img-top" src=@item.Image width="100%" height="225" xmlns="@item.Image">
-                            <p class="card-text">@item.Description</p>
+                            <p class="card-text">@item.Title</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a asp-controller="Race" asp-action="DetailRace" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">View</a>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                    <a asp-controller="Race" asp-action="EditRace" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
                                 </div>
-                                <small class="text-body-secondary">9 mins</small>
+                                
                             </div>
                         </div>
                     </div>
