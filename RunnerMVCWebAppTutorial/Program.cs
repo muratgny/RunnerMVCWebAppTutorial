@@ -15,6 +15,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceRepository>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 //cloudinary setting icin ioptions baglamak için
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
@@ -54,6 +56,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();//This is need for arrangement of content according to user. We wiil hide some part for normal user
 app.UseAuthorization();
 
 app.MapControllerRoute(

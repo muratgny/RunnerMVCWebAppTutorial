@@ -9,38 +9,40 @@
 
 <form method="post" asp-action="CreateClub" enctype="multipart/form-data">
     @*burdaki enctype ı image upload ettiğimiz için ekledik*@
+
+    <input type="hidden" id="AppUserId" name="AppUserId" asp-for="AppUserId" />
     <div class="form-row form-group">
         <div class="col">
-            <input asp-for="Club.Title" class="form-control form-control-lg" placeholder="Title" />
-            <span asp-validation-for="Club.Title" class="text-danger"></span>
+            <input asp-for="Title" class="form-control form-control-lg" placeholder="Title" />
+            <span asp-validation-for="Title" class="text-danger"></span>
         </div>
         <div class="col">
-            <select asp-for="Club.ClubCategory" asp-items="@Html.GetEnumSelectList<ClubCategory>()" class="form-control form-control-lg">
+            <select asp-for="ClubCategory" asp-items="@Html.GetEnumSelectList<ClubCategory>()" class="form-control form-control-lg">
                 <option>--Select--</option>
             </select>
-            <span asp-validation-for="Club.ClubCategory" class="text-danger"></span>
+            <span asp-validation-for="ClubCategory" class="text-danger"></span>
         </div>
     </div>
     <div class="form-row form-group">
         <div class="col">
-            <input asp-for="Club.Description" class="form-control form-control-lg" placeholder="Description" />
-            <span asp-validation-for="Club.Description" class="text-danger"></span>
+            <input asp-for="Description" class="form-control form-control-lg" placeholder="Description" />
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
     </div>
     <div class="form-row form-group">
         <div class="col">
-            <input asp-for="Club.Address.Street" class="form-control form-control-lg" placeholder="Street" />
-            <span asp-validation-for="Club.Address.Street" class="text-danger"></span>
+            <input asp-for="Address.Street" class="form-control form-control-lg" placeholder="Street" />
+            <span asp-validation-for="Address.Street" class="text-danger"></span>
         </div>
     </div>
     <div class="form-row form-group">
         <div class="col">
-            <input asp-for="Club.Address.City" class="form-control form-control-lg" placeholder="City" />
-            <span asp-validation-for="Club.Address.City" class="text-danger"></span>
+            <input asp-for="Address.City" class="form-control form-control-lg" placeholder="City" />
+            <span asp-validation-for="Address.City" class="text-danger"></span>
         </div>
         <div class="col">
-            <input asp-for="Club.Address.State" class="form-control form-control-lg" placeholder="State" />
-            <span asp-validation-for="Club.Address.State" class="text-danger"></span>
+            <input asp-for="Address.State" class="form-control form-control-lg" placeholder="State" />
+            <span asp-validation-for="Address.State" class="text-danger"></span>
         </div>
     </div>
     <div class="form-row form-group">

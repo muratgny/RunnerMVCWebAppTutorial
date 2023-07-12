@@ -4,6 +4,7 @@ using RunnerMVCWebAppTutorial.Data;
 using RunnerMVCWebAppTutorial.Interfaces;
 using RunnerMVCWebAppTutorial.Models;
 using RunnerMVCWebAppTutorial.ViewModels;
+using System.Security.Claims;
 
 namespace RunnerMVCWebAppTutorial.Controllers
 {
@@ -11,10 +12,12 @@ namespace RunnerMVCWebAppTutorial.Controllers
     {
         private IClubRepository _clubRepository;
         private IPhotoService _photoService;
-        public ClubController(IClubRepository clubRepository, IPhotoService photoService)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public ClubController(IClubRepository clubRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
         {
             _clubRepository = clubRepository;
             _photoService = photoService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()//this "index" name must be also view's name under views/club folder. So it is seen directly
         {
@@ -34,7 +37,10 @@ namespace RunnerMVCWebAppTutorial.Controllers
         
         public async Task<IActionResult> CreateClub()//Sayfayı ilk yüklemede göstermek için kullanılan metod
         {
-            return View();
+            var curUser = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var clubVM = new CreateClubViewModel();
+            clubVM.AppUserId = curUser;//burada aldığımız user id yi view e gönderiyoruz kş, create işlemini post ederken hangi user ın create ettiğini bilelim diye
+            return View(clubVM);
         }
 
         [HttpPost]
@@ -44,9 +50,24 @@ namespace RunnerMVCWebAppTutorial.Controllers
             {
                 var result = await _photoService.AddPhotoAsync(clubVM.File);
 
-                clubVM.Club.Image = result.Url.ToString();
+                var club = new Club()
+                {
+                    Id = clubVM.Id,
+                    Title = clubVM.Title,
+                    Description = clubVM.Description,
+                    Address = new Address()
+                    {
+                        City = clubVM.Address.City,
+                        State = clubVM.Address.State,
+                        Street = clubVM.Address.Street,
+                    },
+                    ClubCategory = clubVM.ClubCategory,
+                    AppUserId = clubVM.AppUserId,
+                    Image = result.Url.ToString(),
 
-                _clubRepository.Add(clubVM.Club);
+            }; 
+
+                _clubRepository.Add(club);
 
                 return RedirectToAction("Index");
             }

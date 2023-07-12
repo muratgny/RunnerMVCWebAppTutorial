@@ -6,6 +6,7 @@ using RunnerMVCWebAppTutorial.Models;
 using RunnerMVCWebAppTutorial.Repositories;
 using RunnerMVCWebAppTutorial.Services;
 using RunnerMVCWebAppTutorial.ViewModels;
+using System.Security.Claims;
 
 namespace RunnerMVCWebAppTutorial.Controllers
 {
@@ -13,10 +14,12 @@ namespace RunnerMVCWebAppTutorial.Controllers
     {
         IRaceRepository _raceRepository;
         IPhotoService _photoService;
-        public RaceController(IRaceRepository raceRepository, IPhotoService photoService)
+        IHttpContextAccessor _httpContextAccessor;
+        public RaceController(IRaceRepository raceRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
         {
             _raceRepository = raceRepository;
             _photoService = photoService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()
         {
@@ -32,7 +35,10 @@ namespace RunnerMVCWebAppTutorial.Controllers
 
         public async Task<IActionResult> CreateRace()
         {
-            return View();
+            var curUser = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var raceVM = new CreateRaceViewModel();
+            raceVM.AppUserId = curUser;//burada aldığımız user id yi view e gönderiyoruz kş, create işlemini post ederken hangi user ın create ettiğini bilelim diye
+            return View(raceVM);
         }
 
         [HttpPost]
@@ -42,9 +48,23 @@ namespace RunnerMVCWebAppTutorial.Controllers
             {
                 var result = await _photoService.AddPhotoAsync(raceVM.File);
 
-                raceVM.Race.Image = result.Url.ToString();
+                var race = new Race()
+                {
+                    Id = raceVM.Id,
+                    Title = raceVM.Title,
+                    Description = raceVM.Description,
+                    Address = new Address()
+                    {
+                        City = raceVM.Address.City,
+                        State = raceVM.Address.State,
+                        Street = raceVM.Address.Street,
+                    },
+                    RaceCategory = raceVM.RaceCategory,
+                    Image = result.Url.ToString(),
+                    AppUserId = raceVM.AppUserId,
+                };
 
-                _raceRepository.Add(raceVM.Race);
+                _raceRepository.Add(race);
 
                 return RedirectToAction("Index");
             }
@@ -91,6 +111,33 @@ namespace RunnerMVCWebAppTutorial.Controllers
 
 
             _raceRepository.Update(raceVM.Race);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteRace(int id)
+        {
+            var race = await _raceRepository.GetByIdAsync(id);
+            if (race == null) return View("Error");
+            return View(race);
+        }
+
+        [HttpPost, ActionName("DeleteRace")]
+        public async Task<IActionResult> DeleteRaceForm(int id)
+        {
+            var raceDetails = await _raceRepository.GetByIdAsync(id);
+
+            if (raceDetails == null)
+            {
+                return View("Error");
+            }
+
+            if (!string.IsNullOrEmpty(raceDetails.Image))
+            {
+                _ = _photoService.DeletePhotoAsync(raceDetails.Image);
+            }
+
+            _raceRepository.Delete(raceDetails);
             return RedirectToAction("Index");
         }
     }

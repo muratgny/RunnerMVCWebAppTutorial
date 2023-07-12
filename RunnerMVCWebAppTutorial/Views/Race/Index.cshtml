@@ -22,7 +22,13 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a asp-controller="Race" asp-action="DetailRace" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">View</a>
-                                    <a asp-controller="Race" asp-action="EditRace" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))/*Burada user ın rolune göre gösterim yapıyoruz. Data da user roles tanımlamıştık.
+                                                    Burada orada ne girdiysek onları yazabiliriz.*/
+                                    {
+                                        <a asp-controller="Race" asp-action="EditRace" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <a asp-controller="Race" asp-action="DeleteRace" asp-route-id="@item.Id" type="button" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    }
+                                    
                                 </div>
                                 
                             </div>
