@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RunnerMVCWebAppTutorial.Interfaces;
 using RunnerMVCWebAppTutorial.ViewModels;
+using System.Security.Claims;
 
 namespace RunnerMVCWebAppTutorial.Controllers
 {
     public class UserController : Controller
     {
         IUserRepository _userRepository;
+        IHttpContextAccessor _httpContextAccessor;
         public UserController(IUserRepository userRepository) 
         {
             _userRepository = userRepository;
@@ -24,7 +26,8 @@ namespace RunnerMVCWebAppTutorial.Controllers
                     Id = user.Id,
                     Username = user.UserName,
                     Pace = user.Pace,
-                    Mileage = user.Mileage
+                    Mileage = user.Mileage,
+                    ProfileImageUrl = user.ProfileImageUrl
                 };
                 result.Add(userViewModel);
             }
@@ -45,5 +48,7 @@ namespace RunnerMVCWebAppTutorial.Controllers
             };
             return View(userDetailViewModel);
         }
+
+        
     }
 }

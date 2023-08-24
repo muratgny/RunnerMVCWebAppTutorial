@@ -34,7 +34,8 @@ namespace RunnerMVCWebAppTutorial.Repositories
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<AppUser> GetByIdNoTracking(string id)
+        public async Task<AppUser> GetByIdNoTracking(string id)//We are using this because there could be a problem
+                                                               //if we are handling of two or more users
         {
             return await _context.Users.Where(u => u.Id == id).AsNoTracking().FirstOrDefaultAsync();
         }

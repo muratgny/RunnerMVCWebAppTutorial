@@ -5,7 +5,7 @@ namespace RunnerMVCWebAppTutorial.Models
 {
     public class AppUser : IdentityUser
     {
-        public int? Pace { get; set; }
+        public int? Pace { get; set; } //? means that it can be null, specially for the database
         public int? Mileage { get; set; }
         public string? ProfileImageUrl { get; set; }
         public string? City { get; set; }
